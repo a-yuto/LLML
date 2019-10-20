@@ -35,16 +35,28 @@ fn cor(x: &Vec<f64>,y: &Vec<f64>) -> f64{
     _cor
 }
 //単回帰分析
-fn singleregression(x: &Vec<f64>,y: &Vec<f64>) -> (f64,f64){
-    let b0 = mean(&y) -mean(&x)*cov(&x,&y)/cov(&x,&x);
-    let b1 = cov(&x,&y)/cov(&x,&x);
-    return (b0, b1);
+struct Paramator {
+    beta0: f64,
+    beta1: f64,
 }
-    
+fn singleregression(x: &Vec<f64>,y: &Vec<f64>) -> Paramator{
+    let param = Paramator {
+        beta0: mean(&y) - mean(&x)*cov(&x,&y)/cov(&x,&x),
+        beta1: cov(&x,&y)/cov(&x,&x)
+    };
+    param
+}
+
+impl Paramator {
+    fn aniticipation(&self,z:f64) -> f64 {
+        self.beta0 + self.beta1 * z
+    }
+
+}
+
 fn main() {
     let x = vec![2.2,4.1,5.5,1.9,3.4];
     let y = vec![71.,81.,86.,72.,77.];
     let res = singleregression(&x,&y);
-    println!("b0 = {},b1 = {}",res.0,res.1);
-    
+    println!("{}",res.aniticipation(3.0)) 
 }
