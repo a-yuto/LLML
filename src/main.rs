@@ -35,16 +35,15 @@ fn cor(x: &Vec<f64>,y: &Vec<f64>) -> f64{
     _cor
 }
 //単回帰分析
-fn singleregression(x: &Vec<f64>,y: &Vec<f64>) -> (f64,f64){
-    let b0 = mean(&y) -mean(&x)*cov(&x,&y)/cov(&x,&x);
+fn singleregression(x: &Vec<f64>,y: &Vec<f64>) -> Box<dyn Fn(f64) -> f64>{
+    let b0 = mean(&y) - mean(&x)*cov(&x,&y)/cov(&x,&x);
     let b1 = cov(&x,&y)/cov(&x,&x);
-    return (b0, b1);
+    Box::new(move |x| b0 + b1 * x)
 }
     
 fn main() {
     let x = vec![2.2,4.1,5.5,1.9,3.4];
     let y = vec![71.,81.,86.,72.,77.];
-    let res = singleregression(&x,&y);
-    println!("b0 = {},b1 = {}",res.0,res.1);
-    
+    let f = singleregression(&x,&y);
+    println!("{}",f(2.5).to_string());   
 }
